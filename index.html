@@ -2,98 +2,97 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Divino</title>
     <style>
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #000000;
-            color: #ffffff;
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
-            margin: 0;
         }
-
-        h1 {
-            color: #FF0000;
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        .button {
-            background-color: #FF0000;
-            color: white;
-            padding: 12px 24px;
-            font-size: 18px;
-            border: none;
-            border-radius: 15px;
-            cursor: pointer;
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
             margin: 10px;
-            transition: background-color 0.3s ease;
         }
-
-        .button:hover {
-            background-color: #c00;
-        }
-
-        input[type="text"] {
-            padding: 12px 18px;
-            font-size: 18px;
-            border: 2px solid #FF0000;
-            border-radius: 15px;
-            background-color: transparent;
+        button {
+            background-color: red;
             color: white;
-            margin-top: 10px;
-            width: 80%;
+            border: none;
+            cursor: pointer;
         }
-
-        .message {
-            font-size: 20px;
-            margin-top: 30px;
-            font-weight: bold;
+        button:hover {
+            background-color: darkred;
         }
-
-        .emoji {
-            font-size: 36px;
-            margin-top: 10px;
+        img {
+            margin-top: 20px;
+            max-width: 300px;
+            border-radius: 15px;
         }
     </style>
 </head>
 <body>
     <h1>Test Divino</h1>
-    <p>Scrivi una bestemmia (se ci riesci...) e scopri la risposta divina!</p>
+    <p>Scrivi una frase e scopri la risposta divina!</p>
+    
+    <input type="text" id="frase" placeholder="Scrivi qui...">
+    <br>
+    <button onclick="verificaFrase()">Controlla</button>
 
-    <input type="text" id="bestemmia" placeholder="Scrivi qui..." >
-    <br><br>
-    <button class="button" onclick="verificaBestemmia()">Controlla</button>
-
-    <div class="message" id="risultato"></div>
+    <div id="risultato" style="margin-top: 20px; font-size: 20px;"></div>
+    <div id="originalita" style="font-size: 18px;"></div>
+    <div id="contatore" style="margin-top: 15px; font-size: 18px;">Bestemmie analizzate: 0</div>
+    <img id="immagine" src="" alt="" style="display:none;">
 
     <script>
-        let tentativi = 0;
+        const paroleChiave = ["dio", "gesù", "cristo", "madonna", "iddio"];
+        const terminiOffensivi = ["porco", "cane", "bestia", "maiale", "puttana", "ladro", "boia", "serpente", "merda", "orco"];
+        const eufemismi = ["maremma", "madosca", "cribbio", "perbacco", "perdiana", "perdinci"];
 
-        function verificaBestemmia() {
-            const bestemmia = document.getElementById("bestemmia").value.toLowerCase();
-            let risposta = "";
-            let emoji = "";
+        let totaleBestemmie = 0;
 
-            // Se la bestemmia contiene parole pesanti, rispondi con un messaggio forte
-            if (bestemmia.includes("madonna") || bestemmia.includes("gesù") || bestemmia.includes("dio")) {
-                tentativi++;
-                if (tentativi >= 3) {
-                    risposta = "Hai esagerato! Ecco il tuo video di punizione!";
-                    emoji = "😈";
-                    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Link al video di punizione
-                } else {
-                    risposta = "Che bestemmione! Pure i santi ti temono!";
-                    emoji = "👿";
-                }
+        function verificaFrase() {
+            const frase = document.getElementById("frase").value.toLowerCase();
+            let gravita = 0;
+            let originalita = 0;
+            let immagine = "";
+            let messaggio = "";
+
+            paroleChiave.forEach(parola => {
+                if (frase.includes(parola)) gravita += 2;
+            });
+
+            terminiOffensivi.forEach(parola => {
+                if (frase.includes(parola)) gravita += 1;
+            });
+
+            eufemismi.forEach(parola => {
+                if (frase.includes(parola)) gravita += 0.5;
+            });
+
+            if (gravita >= 4) {
+                messaggio = "Frase altamente offensiva!";
+                immagine = "https://i.imgur.com/zr1nIXp.png";
+            } else if (gravita >= 2) {
+                messaggio = "Frase moderatamente offensiva.";
+                immagine = "https://i.imgur.com/2s7zrXD.png";
             } else {
-                risposta = "Poco originale... prova a fare meglio!";
-                emoji = "😅";
+                messaggio = "Frase poco offensiva.";
+                immagine = "https://i.imgur.com/d7sFSBA.png";
             }
 
-            document.getElementById("risultato").innerHTML = risposta + " " + emoji;
+            originalita = Math.min(100, gravita * 25 + Math.floor(Math.random() * 25));
+
+            document.getElementById("risultato").innerText = messaggio;
+            document.getElementById("originalita").innerText = "Originalità: " + originalita + "%";
+            const img = document.getElementById("immagine");
+            img.src = immagine;
+            img.style.display = "block";
+
+            totaleBestemmie++;
+            document.getElementById("contatore").innerText = "Bestemmie analizzate: " + totaleBestemmie;
         }
     </script>
 </body>
