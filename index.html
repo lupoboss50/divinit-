@@ -1,99 +1,135 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <title>Test Divino</title>
-    <style>
-        body {
-            background-color: #000;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        input, button {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            margin: 10px;
-        }
-        button {
-            background-color: red;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: darkred;
-        }
-        img {
-            margin-top: 20px;
-            max-width: 300px;
-            border-radius: 15px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Divino</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #ff4444;
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      font-size: 32px;
+    }
+    input, button {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      margin: 10px;
+      max-width: 90%;
+    }
+    input {
+      width: 80%;
+      border: none;
+      outline: none;
+    }
+    button {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #cc0000;
+    }
+    .immagine {
+      margin-top: 20px;
+      max-width: 90%;
+      border-radius: 15px;
+      display: none;
+    }
+    .box {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Test Divino</h1>
-    <p>Scrivi una frase e scopri la risposta divina!</p>
-    
-    <input type="text" id="frase" placeholder="Scrivi qui...">
-    <br>
-    <button onclick="verificaFrase()">Controlla</button>
+  <h1>Test Divino</h1>
+  <p>Scrivi la tua bestemmia (o quasi) e scopri la reazione divina.</p>
 
-    <div id="risultato" style="margin-top: 20px; font-size: 20px;"></div>
-    <div id="originalita" style="font-size: 18px;"></div>
-    <div id="contatore" style="margin-top: 15px; font-size: 18px;">Bestemmie analizzate: 0</div>
-    <img id="immagine" src="" alt="" style="display:none;">
+  <input type="text" id="frase" placeholder="Scrivi qui la frase...">
+  <br>
+  <button onclick="verificaFrase()">Controlla</button>
 
-    <script>
-        const paroleChiave = ["dio", "gesù", "cristo", "madonna", "iddio"];
-        const terminiOffensivi = ["porco", "cane", "bestia", "maiale", "puttana", "ladro", "boia", "serpente", "merda", "orco"];
-        const eufemismi = ["maremma", "madosca", "cribbio", "perbacco", "perdiana", "perdinci"];
+  <div class="box" id="risultato"></div>
+  <div class="box" id="originalita"></div>
+  <div class="box" id="contatore">Bestemmie analizzate: 0</div>
+  <img id="immagine" class="immagine" src="" alt="Reazione divina">
 
-        let totaleBestemmie = 0;
+  <script>
+    const paroleChiave = ["dio", "gesù", "cristo", "madonna", "iddio"];
+    const terminiOffensivi = ["porco", "cane", "ladro", "maiale", "puttana", "boia", "serpente"];
+    const frasiForti = [
+      "Pure i santi hanno paura di te!",
+      "Il Vaticano ti ha messo nella blacklist.",
+      "L'inferno ti manda rispetto.",
+      "Lucifero vuole stringerti la mano.",
+      "Hai superato ogni limite celestiale!",
+      "Il cielo ha chiuso le porte appena hai scritto.",
+      "Non sei un bestemmiatore… sei una leggenda blasfema.",
+      "Hai fatto tremare la cupola di San Pietro.",
+      "I cherubini hanno chiamato la polizia."
+    ];
+    const frasiMedie = [
+      "Ci sei quasi… ma puoi fare meglio.",
+      "Un classico, dai qualcosa di più.",
+      "Rispetto… ma ti vogliamo più creativo.",
+      "Il paradiso si è accorto di te.",
+      "Hai bestemmiato con garbo."
+    ];
+    const frasiLeggere = [
+      "Poco originale… dai, impegnati!",
+      "Neanche i santi si sono accorti.",
+      "Zero impatto spirituale.",
+      "Nemmeno Satana si è svegliato.",
+      "Ti sei autocensurato."
+    ];
 
-        function verificaFrase() {
-            const frase = document.getElementById("frase").value.toLowerCase();
-            let gravita = 0;
-            let originalita = 0;
-            let immagine = "";
-            let messaggio = "";
+    let totaleBestemmie = 0;
 
-            paroleChiave.forEach(parola => {
-                if (frase.includes(parola)) gravita += 2;
-            });
+    function verificaFrase() {
+      const frase = document.getElementById("frase").value.toLowerCase();
+      let gravita = 0;
+      let risposta = "";
+      let immagine = "";
+      let originalita = Math.floor(Math.random() * 50) + 30;
 
-            terminiOffensivi.forEach(parola => {
-                if (frase.includes(parola)) gravita += 1;
-            });
+      paroleChiave.forEach(parola => {
+        if (frase.includes(parola)) gravita += 2;
+      });
 
-            eufemismi.forEach(parola => {
-                if (frase.includes(parola)) gravita += 0.5;
-            });
+      terminiOffensivi.forEach(parola => {
+        if (frase.includes(parola)) gravita += 1;
+      });
 
-            if (gravita >= 4) {
-                messaggio = "Frase altamente offensiva!";
-                immagine = "https://i.imgur.com/zr1nIXp.png";
-            } else if (gravita >= 2) {
-                messaggio = "Frase moderatamente offensiva.";
-                immagine = "https://i.imgur.com/2s7zrXD.png";
-            } else {
-                messaggio = "Frase poco offensiva.";
-                immagine = "https://i.imgur.com/d7sFSBA.png";
-            }
+      if (gravita >= 4) {
+        risposta = frasiForti[Math.floor(Math.random() * frasiForti.length)];
+        immagine = "https://i.imgur.com/zr1nIXp.png";
+        originalita += 30;
+      } else if (gravita >= 2) {
+        risposta = frasiMedie[Math.floor(Math.random() * frasiMedie.length)];
+        immagine = "https://i.imgur.com/2s7zrXD.png";
+        originalita += 15;
+      } else {
+        risposta = frasiLeggere[Math.floor(Math.random() * frasiLeggere.length)];
+        immagine = "https://i.imgur.com/d7sFSBA.png";
+      }
 
-            originalita = Math.min(100, gravita * 25 + Math.floor(Math.random() * 25));
+      document.getElementById("risultato").innerText = risposta;
+      document.getElementById("originalita").innerText = "Originalità: " + originalita + "%";
 
-            document.getElementById("risultato").innerText = messaggio;
-            document.getElementById("originalita").innerText = "Originalità: " + originalita + "%";
-            const img = document.getElementById("immagine");
-            img.src = immagine;
-            img.style.display = "block";
+      const img = document.getElementById("immagine");
+      img.src = immagine;
+      img.style.display = "block";
 
-            totaleBestemmie++;
-            document.getElementById("contatore").innerText = "Bestemmie analizzate: " + totaleBestemmie;
-        }
-    </script>
+      totaleBestemmie++;
+      document.getElementById("contatore").innerText = "Bestemmie analizzate: " + totaleBestemmie;
+    }
+  </script>
 </body>
 </html>
