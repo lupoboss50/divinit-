@@ -54,6 +54,15 @@
       pointer-events: none;
     }
 
+    .share-options {
+      display: none;
+      margin-top: 1rem;
+    }
+
+    .share-options button {
+      background-color: #42a5f5;
+    }
+
     @keyframes fall {
       0% { transform: translateY(-100px); opacity: 1; }
       100% { transform: translateY(100vh); opacity: 0; }
@@ -65,20 +74,25 @@
   <input type="text" id="input" placeholder="Scrivi qualcosa di blasfemo...">
   <br>
   <button onclick="valuta()">Invia</button>
-  <button onclick="condividi()">Condividi</button>
+  <button onclick="toggleCondividi()">Condividi</button>
+
+  <div class="share-options" id="shareOptions">
+    <button onclick="condividiWhatsApp()">WhatsApp</button>
+    <button onclick="condividiTelegram()">Telegram</button>
+    <button onclick="copiaTesto()">Instagram</button>
+  </div>
 
   <div class="result" id="risultato"></div>
   <div id="conteggio"></div>
 
   <script>
-    const basse = [ /* ... stesse bestemmie basse ... */ ];
-    const alte = [ /* ... stesse bestemmie alte ... */ ];
+    const basse = [/* le tue bestemmie basse */];
+    const alte = [/* le tue bestemmie alte */];
 
     let conteggioBestemmie = 0;
     const punteggiSalvati = {};
 
     function hashString(str) {
-      // Funzione semplice per fare hash
       let hash = 0;
       for (let i = 0; i < str.length; i++) {
         hash = (hash << 5) - hash + str.charCodeAt(i);
@@ -97,11 +111,11 @@
         punteggio = punteggiSalvati[input];
       } else {
         if (alte.includes(input)) {
-          punteggio = 90 + (hashString(input) % 11); // 90-100
+          punteggio = 90 + (hashString(input) % 11);
         } else if (basse.includes(input)) {
-          punteggio = 30 + (hashString(input) % 21); // 30-50
+          punteggio = 30 + (hashString(input) % 21);
         } else {
-          punteggio = 10 + (hashString(input) % 21); // 10-30
+          punteggio = 10 + (hashString(input) % 21);
         }
         punteggiSalvati[input] = punteggio;
       }
@@ -115,7 +129,6 @@
     function mostraRisultato(p) {
       const risultato = document.getElementById("risultato");
       risultato.innerHTML = `Originalità: ${p}%`;
-
       if (p >= 80) {
         risultato.innerHTML += " 😈✝️";
       } else if (p >= 50) {
@@ -137,14 +150,31 @@
       }
     }
 
-    function condividi() {
+    function toggleCondividi() {
+      const box = document.getElementById("shareOptions");
+      box.style.display = box.style.display === "block" ? "none" : "block";
+    }
+
+    function creaTestoCondivisibile() {
       const input = document.getElementById("input").value.trim();
       const punteggio = punteggiSalvati[input.toLowerCase()] || 0;
+      return `Ho bestemmiato: "${input}" e ho preso ${punteggio}% di originalità su Test Divino!`;
+    }
 
-      const text = `Ho bestemmiato: "${input}" e ho preso ${punteggio}% di originalità su Test Divino!`;
+    function condividiWhatsApp() {
+      const testo = encodeURIComponent(creaTestoCondivisibile());
+      window.open(`https://wa.me/?text=${testo}`, '_blank');
+    }
 
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Test copiato negli appunti! Incollalo dove vuoi.");
+    function condividiTelegram() {
+      const testo = encodeURIComponent(creaTestoCondivisibile());
+      window.open(`https://t.me/share/url?url=&text=${testo}`, '_blank');
+    }
+
+    function copiaTesto() {
+      const testo = creaTestoCondivisibile();
+      navigator.clipboard.writeText(testo).then(() => {
+        alert("Testo copiato! Incollalo su Instagram o dove vuoi.");
       });
     }
   </script>
