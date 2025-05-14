@@ -1,126 +1,137 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Divino</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #000;
-            color: #fff;
-            text-align: center;
-            padding: 20px;
-        }
+  <meta charset="UTF-8">
+  <title>Test Divino</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(to bottom, #b3e5fc, #ffffff);
+      background-attachment: fixed;
+      color: #333;
+      text-align: center;
+      padding: 2rem;
+    }
 
-        h1 {
-            color: #e74c3c;
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
+    h1 {
+      color: #1565c0;
+      font-size: 2.5rem;
+    }
 
-        .button {
-            background-color: #e74c3c;
-            color: white;
-            padding: 10px 20px;
-            font-size: 16px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-        }
+    input {
+      padding: 1rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      width: 80%;
+      max-width: 400px;
+      margin-top: 1rem;
+      font-size: 1rem;
+    }
 
-        .button:hover {
-            background-color: #c0392b;
-        }
+    button {
+      padding: 0.7rem 1.5rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      border-radius: 10px;
+      border: none;
+      background-color: #64b5f6;
+      color: white;
+      cursor: pointer;
+    }
 
-        .message {
-            font-size: 18px;
-            margin-top: 20px;
-            color: #e74c3c;
-        }
+    .result {
+      margin-top: 2rem;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
 
-        .emoji {
-            font-size: 30px;
-        }
+    .emoji {
+      position: absolute;
+      font-size: 2rem;
+      animation: fall 2.5s linear forwards;
+      pointer-events: none;
+    }
 
-        input[type="text"] {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            margin-top: 10px;
-            border: 2px solid #e74c3c;
-            background-color: #333;
-            color: #fff;
-        }
-
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 28px;
-            }
-
-            .button {
-                font-size: 14px;
-                padding: 8px 16px;
-            }
-
-            .message {
-                font-size: 16px;
-            }
-        }
-    </style>
+    @keyframes fall {
+      0% { transform: translateY(-100px); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+  </style>
 </head>
 <body>
-    <h1>Test Divino</h1>
-    <p>Scrivi una bestemmia (se ci riesci...) e scopri la risposta divina!</p>
+  <h1>Test Divino</h1>
+  <input type="text" id="input" placeholder="Scrivi qualcosa di blasfemo...">
+  <br>
+  <button onclick="valuta()">Invia</button>
 
-    <input type="text" id="bestemmia" placeholder="Scrivi qui...">
-    <br><br>
-    <button class="button" onclick="verificaBestemmia()">Controlla</button>
+  <div class="result" id="risultato"></div>
+  <div id="conteggio"></div>
 
-    <div class="message" id="risultato"></div>
+  <script>
+    const basse = [
+      "porco dio", "porca la puttana della madonna", "gesu bastardo", "gesu cristo il maiale",
+      "dio infame", "madonna troia", "gesù cane", "cristo bastardo", "porco cristo", "dio lurido",
+      "dio merda", "dio bastardo", "madonna lurida", "dio cane", "cristo infame", "dio in culo",
+      "madonna bestia", "dio ladro", "gesù coglione", "cristo senza palle"
+    ];
 
-    <div id="emoji-result" class="emoji"></div>
+    const alte = [
+      "porcaccio il dio quel padre coglione che ha stuprato la madonna per fare quel aborto mancato di gesu cristo",
+      "dio col cazzo in gola alla madonna", "dio che si scopa i santi a catena", "dio che stupra cristo",
+      "madonna che si fa gesù", "dio e gesù in gangbang", "dio che si scopa cristo e maria",
+      "dio che si fa i bambini in chiesa", "dio che piscia sull'altare", "cristo che lecca satana",
+      "madonna che succhia dio", "dio che masturba l'angelo", "dio e satana in amore",
+      "dio vomita sui fedeli", "dio esce dal culo del papa", "cristo che si impala da solo",
+      "dio che si fa la croce nel culo", "madonna posseduta da gesù", "dio che scoreggia vangelo", "dio si fa gesù da dietro"
+    ];
 
-    <script>
-        let tentativi = 0;
+    let conteggioBestemmie = 0;
 
-        // Funzione per calcolare l'originalità basata sulla frase
-        function calcolaOriginalita(frase) {
-            let somma = 0;
-            for (let i = 0; i < frase.length; i++) {
-                somma += frase.charCodeAt(i);
-            }
-            return (somma % 70) + 30;
+    function valuta() {
+      const input = document.getElementById("input").value.toLowerCase().trim();
+      let punteggio = 0;
+
+      if (alte.includes(input)) {
+        punteggio = 90 + Math.floor(Math.random() * 11); // 90-100
+      } else if (basse.includes(input)) {
+        punteggio = 30 + Math.floor(Math.random() * 21); // 30-50
+      } else {
+        punteggio = 10 + Math.floor(Math.random() * 21); // generico
+      }
+
+      conteggioBestemmie++;
+      document.getElementById("conteggio").textContent = `Bestemmie totali: ${conteggioBestemmie}`;
+
+      mostraEmoji(punteggio);
+      mostraRisultato(punteggio);
+    }
+
+    function mostraRisultato(p) {
+      const risultato = document.getElementById("risultato");
+      risultato.innerHTML = `Originalità: ${p}%`;
+
+      if (p >= 80) {
+        risultato.innerHTML += " 😈✝️";
+      } else if (p >= 50) {
+        risultato.innerHTML += " 😈";
+      }
+    }
+
+    function mostraEmoji(punteggio) {
+      if (punteggio >= 50) {
+        const tipo = punteggio >= 80 ? "😈✝️" : "😈";
+        for (let i = 0; i < 40; i++) {
+          const emoji = document.createElement("div");
+          emoji.classList.add("emoji");
+          emoji.textContent = tipo;
+          emoji.style.left = Math.random() * 100 + "vw";
+          document.body.appendChild(emoji);
+          setTimeout(() => emoji.remove(), 2500);
         }
-
-        // Funzione che verifica la bestemmia e fornisce una risposta
-        function verificaBestemmia() {
-            const bestemmia = document.getElementById("bestemmia").value.toLowerCase();
-            let risposta = "";
-            let emoji = "";
-            let originalita = calcolaOriginalita(bestemmia);
-
-            // Se la bestemmia contiene parole pesanti, rispondi con un messaggio forte
-            if (bestemmia.includes("madonna") || bestemmia.includes("gesù") || bestemmia.includes("dio") || bestemmia.includes("cristo") || bestemmia.includes("santi")) {
-                tentativi++;
-                if (tentativi >= 3) {
-                    risposta = "Hai esagerato! Ecco il tuo video di punizione!";
-                    emoji = "😈";
-                    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Link al video di punizione
-                } else {
-                    risposta = "Che bestemmione! Pure i santi ti temono!";
-                    emoji = "👿";
-                }
-            } else {
-                risposta = "Poco originale... prova a fare meglio!";
-                emoji = "😅";
-            }
-
-            // Mostra il risultato con l'originalità
-            document.getElementById("risultato").innerHTML = `Originalità: ${originalita}%<br>${risposta}`;
-            document.getElementById("emoji-result").innerHTML = emoji;
-        }
-    </script>
+      }
+    }
+  </script>
 </body>
 </html>
