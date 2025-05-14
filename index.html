@@ -32,7 +32,7 @@
 
     button {
       padding: 0.7rem 1.5rem;
-      margin-top: 1rem;
+      margin: 0.5rem;
       font-size: 1rem;
       border-radius: 10px;
       border: none;
@@ -65,47 +65,51 @@
   <input type="text" id="input" placeholder="Scrivi qualcosa di blasfemo...">
   <br>
   <button onclick="valuta()">Invia</button>
+  <button onclick="condividi()">Condividi</button>
 
   <div class="result" id="risultato"></div>
   <div id="conteggio"></div>
 
   <script>
-    const basse = [
-      "porco dio", "porca la puttana della madonna", "gesu bastardo", "gesu cristo il maiale",
-      "dio infame", "madonna troia", "gesù cane", "cristo bastardo", "porco cristo", "dio lurido",
-      "dio merda", "dio bastardo", "madonna lurida", "dio cane", "cristo infame", "dio in culo",
-      "madonna bestia", "dio ladro", "gesù coglione", "cristo senza palle"
-    ];
-
-    const alte = [
-      "porcaccio il dio quel padre coglione che ha stuprato la madonna per fare quel aborto mancato di gesu cristo",
-      "dio col cazzo in gola alla madonna", "dio che si scopa i santi a catena", "dio che stupra cristo",
-      "madonna che si fa gesù", "dio e gesù in gangbang", "dio che si scopa cristo e maria",
-      "dio che si fa i bambini in chiesa", "dio che piscia sull'altare", "cristo che lecca satana",
-      "madonna che succhia dio", "dio che masturba l'angelo", "dio e satana in amore",
-      "dio vomita sui fedeli", "dio esce dal culo del papa", "cristo che si impala da solo",
-      "dio che si fa la croce nel culo", "madonna posseduta da gesù", "dio che scoreggia vangelo", "dio si fa gesù da dietro"
-    ];
+    const basse = [ /* ... stesse bestemmie basse ... */ ];
+    const alte = [ /* ... stesse bestemmie alte ... */ ];
 
     let conteggioBestemmie = 0;
+    const punteggiSalvati = {};
+
+    function hashString(str) {
+      // Funzione semplice per fare hash
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = (hash << 5) - hash + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash);
+    }
 
     function valuta() {
       const input = document.getElementById("input").value.toLowerCase().trim();
+      if (!input) return;
+
       let punteggio = 0;
 
-      if (alte.includes(input)) {
-        punteggio = 90 + Math.floor(Math.random() * 11); // 90-100
-      } else if (basse.includes(input)) {
-        punteggio = 30 + Math.floor(Math.random() * 21); // 30-50
+      if (punteggiSalvati[input]) {
+        punteggio = punteggiSalvati[input];
       } else {
-        punteggio = 10 + Math.floor(Math.random() * 21); // generico
+        if (alte.includes(input)) {
+          punteggio = 90 + (hashString(input) % 11); // 90-100
+        } else if (basse.includes(input)) {
+          punteggio = 30 + (hashString(input) % 21); // 30-50
+        } else {
+          punteggio = 10 + (hashString(input) % 21); // 10-30
+        }
+        punteggiSalvati[input] = punteggio;
       }
 
       conteggioBestemmie++;
       document.getElementById("conteggio").textContent = `Bestemmie totali: ${conteggioBestemmie}`;
-
-      mostraEmoji(punteggio);
       mostraRisultato(punteggio);
+      mostraEmoji(punteggio);
     }
 
     function mostraRisultato(p) {
@@ -131,6 +135,17 @@
           setTimeout(() => emoji.remove(), 2500);
         }
       }
+    }
+
+    function condividi() {
+      const input = document.getElementById("input").value.trim();
+      const punteggio = punteggiSalvati[input.toLowerCase()] || 0;
+
+      const text = `Ho bestemmiato: "${input}" e ho preso ${punteggio}% di originalità su Test Divino!`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Test copiato negli appunti! Incollalo dove vuoi.");
+      });
     }
   </script>
 </body>
