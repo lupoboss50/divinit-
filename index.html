@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Divino</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        h1 {
+            color: #FF0000;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            background-color: #FF0000;
+            color: white;
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .button:hover {
+            background-color: #c00;
+        }
+
+        input[type="text"] {
+            padding: 12px 18px;
+            font-size: 18px;
+            border: 2px solid #FF0000;
+            border-radius: 15px;
+            background-color: transparent;
+            color: white;
+            margin-top: 10px;
+            width: 80%;
+        }
+
+        .message {
+            font-size: 20px;
+            margin-top: 30px;
+            font-weight: bold;
+        }
+
+        .emoji {
+            font-size: 36px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Divino</h1>
+    <p>Scrivi una bestemmia (se ci riesci...) e scopri la risposta divina!</p>
+
+    <input type="text" id="bestemmia" placeholder="Scrivi qui..." >
+    <br><br>
+    <button class="button" onclick="verificaBestemmia()">Controlla</button>
+
+    <div class="message" id="risultato"></div>
+
+    <script>
+        let tentativi = 0;
+
+        function verificaBestemmia() {
+            const bestemmia = document.getElementById("bestemmia").value.toLowerCase();
+            let risposta = "";
+            let emoji = "";
+
+            // Se la bestemmia contiene parole pesanti, rispondi con un messaggio forte
+            if (bestemmia.includes("madonna") || bestemmia.includes("gesù") || bestemmia.includes("dio")) {
+                tentativi++;
+                if (tentativi >= 3) {
+                    risposta = "Hai esagerato! Ecco il tuo video di punizione!";
+                    emoji = "😈";
+                    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Link al video di punizione
+                } else {
+                    risposta = "Che bestemmione! Pure i santi ti temono!";
+                    emoji = "👿";
+                }
+            } else {
+                risposta = "Poco originale... prova a fare meglio!";
+                emoji = "😅";
+            }
+
+            document.getElementById("risultato").innerHTML = risposta + " " + emoji;
+        }
+    </script>
+</body>
+</html>
