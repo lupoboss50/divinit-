@@ -1,135 +1,126 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Divino</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #ff4444;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    h1 {
-      font-size: 32px;
-    }
-    input, button {
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 8px;
-      margin: 10px;
-      max-width: 90%;
-    }
-    input {
-      width: 80%;
-      border: none;
-      outline: none;
-    }
-    button {
-      background-color: #ff0000;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #cc0000;
-    }
-    .immagine {
-      margin-top: 20px;
-      max-width: 90%;
-      border-radius: 15px;
-      display: none;
-    }
-    .box {
-      margin-top: 20px;
-      font-size: 18px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Divino</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #e74c3c;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        .button:hover {
+            background-color: #c0392b;
+        }
+
+        .message {
+            font-size: 18px;
+            margin-top: 20px;
+            color: #e74c3c;
+        }
+
+        .emoji {
+            font-size: 30px;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border: 2px solid #e74c3c;
+            background-color: #333;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 28px;
+            }
+
+            .button {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+
+            .message {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Test Divino</h1>
-  <p>Scrivi la tua bestemmia (o quasi) e scopri la reazione divina.</p>
+    <h1>Test Divino</h1>
+    <p>Scrivi una bestemmia (se ci riesci...) e scopri la risposta divina!</p>
 
-  <input type="text" id="frase" placeholder="Scrivi qui la frase...">
-  <br>
-  <button onclick="verificaFrase()">Controlla</button>
+    <input type="text" id="bestemmia" placeholder="Scrivi qui...">
+    <br><br>
+    <button class="button" onclick="verificaBestemmia()">Controlla</button>
 
-  <div class="box" id="risultato"></div>
-  <div class="box" id="originalita"></div>
-  <div class="box" id="contatore">Bestemmie analizzate: 0</div>
-  <img id="immagine" class="immagine" src="" alt="Reazione divina">
+    <div class="message" id="risultato"></div>
 
-  <script>
-    const paroleChiave = ["dio", "gesù", "cristo", "madonna", "iddio"];
-    const terminiOffensivi = ["porco", "cane", "ladro", "maiale", "puttana", "boia", "serpente"];
-    const frasiForti = [
-      "Pure i santi hanno paura di te!",
-      "Il Vaticano ti ha messo nella blacklist.",
-      "L'inferno ti manda rispetto.",
-      "Lucifero vuole stringerti la mano.",
-      "Hai superato ogni limite celestiale!",
-      "Il cielo ha chiuso le porte appena hai scritto.",
-      "Non sei un bestemmiatore… sei una leggenda blasfema.",
-      "Hai fatto tremare la cupola di San Pietro.",
-      "I cherubini hanno chiamato la polizia."
-    ];
-    const frasiMedie = [
-      "Ci sei quasi… ma puoi fare meglio.",
-      "Un classico, dai qualcosa di più.",
-      "Rispetto… ma ti vogliamo più creativo.",
-      "Il paradiso si è accorto di te.",
-      "Hai bestemmiato con garbo."
-    ];
-    const frasiLeggere = [
-      "Poco originale… dai, impegnati!",
-      "Neanche i santi si sono accorti.",
-      "Zero impatto spirituale.",
-      "Nemmeno Satana si è svegliato.",
-      "Ti sei autocensurato."
-    ];
+    <div id="emoji-result" class="emoji"></div>
 
-    let totaleBestemmie = 0;
+    <script>
+        let tentativi = 0;
 
-    function verificaFrase() {
-      const frase = document.getElementById("frase").value.toLowerCase();
-      let gravita = 0;
-      let risposta = "";
-      let immagine = "";
-      let originalita = Math.floor(Math.random() * 50) + 30;
+        // Funzione per calcolare l'originalità basata sulla frase
+        function calcolaOriginalita(frase) {
+            let somma = 0;
+            for (let i = 0; i < frase.length; i++) {
+                somma += frase.charCodeAt(i);
+            }
+            return (somma % 70) + 30;
+        }
 
-      paroleChiave.forEach(parola => {
-        if (frase.includes(parola)) gravita += 2;
-      });
+        // Funzione che verifica la bestemmia e fornisce una risposta
+        function verificaBestemmia() {
+            const bestemmia = document.getElementById("bestemmia").value.toLowerCase();
+            let risposta = "";
+            let emoji = "";
+            let originalita = calcolaOriginalita(bestemmia);
 
-      terminiOffensivi.forEach(parola => {
-        if (frase.includes(parola)) gravita += 1;
-      });
+            // Se la bestemmia contiene parole pesanti, rispondi con un messaggio forte
+            if (bestemmia.includes("madonna") || bestemmia.includes("gesù") || bestemmia.includes("dio") || bestemmia.includes("cristo") || bestemmia.includes("santi")) {
+                tentativi++;
+                if (tentativi >= 3) {
+                    risposta = "Hai esagerato! Ecco il tuo video di punizione!";
+                    emoji = "😈";
+                    window.location.href = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // Link al video di punizione
+                } else {
+                    risposta = "Che bestemmione! Pure i santi ti temono!";
+                    emoji = "👿";
+                }
+            } else {
+                risposta = "Poco originale... prova a fare meglio!";
+                emoji = "😅";
+            }
 
-      if (gravita >= 4) {
-        risposta = frasiForti[Math.floor(Math.random() * frasiForti.length)];
-        immagine = "https://i.imgur.com/zr1nIXp.png";
-        originalita += 30;
-      } else if (gravita >= 2) {
-        risposta = frasiMedie[Math.floor(Math.random() * frasiMedie.length)];
-        immagine = "https://i.imgur.com/2s7zrXD.png";
-        originalita += 15;
-      } else {
-        risposta = frasiLeggere[Math.floor(Math.random() * frasiLeggere.length)];
-        immagine = "https://i.imgur.com/d7sFSBA.png";
-      }
-
-      document.getElementById("risultato").innerText = risposta;
-      document.getElementById("originalita").innerText = "Originalità: " + originalita + "%";
-
-      const img = document.getElementById("immagine");
-      img.src = immagine;
-      img.style.display = "block";
-
-      totaleBestemmie++;
-      document.getElementById("contatore").innerText = "Bestemmie analizzate: " + totaleBestemmie;
-    }
-  </script>
+            // Mostra il risultato con l'originalità
+            document.getElementById("risultato").innerHTML = `Originalità: ${originalita}%<br>${risposta}`;
+            document.getElementById("emoji-result").innerHTML = emoji;
+        }
+    </script>
 </body>
 </html>
